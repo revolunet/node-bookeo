@@ -12,6 +12,7 @@ const bookeo = new Bookeo({ secretKey, apiKey });
 
 bookeo.bookings().then(results => {
   console.log(results);
+  // return today bookings
 })
 
 ```

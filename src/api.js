@@ -4,7 +4,7 @@ export default {
     bookings: {
       all: {
         path: "/bookings",
-        params: {}
+        //params: {}
       },
       byId: {
         path: "/bookings/{id}",

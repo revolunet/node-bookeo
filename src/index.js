@@ -15,18 +15,15 @@ const authHeaders = ({ secretKey, apiKey }) => ({
   "X-Bookeo-apiKey": apiKey
 });
 
-const endTime = addDays(endOfToday(), 7).toISOString();
-
-const bookeoAPI = forge(api);
-
 export class Bookeo {
   constructor({ secretKey, apiKey }) {
     this.creds = { secretKey, apiKey };
+    this.client = forge(api);
   }
   // fetch a singlepage based on pageNavigationToken
   // see https://www.bookeo.com/api/protocol/
   fetchPage = (endpoint, pageNavigationToken, pageNumber) => {
-    return bookeoAPI[endpoint]
+    return this.client[endpoint]
       .all({
         pageNavigationToken,
         pageNumber,
@@ -45,10 +42,10 @@ export class Bookeo {
     );
     return Promise.all(fetchs).then(flatten);
   };
-  addNextPages = json => {
-    if (json.info.totalPages > 1) {
+  addNextPages = endpoint => json => {
+    if (json.info && json.info.totalPages > 1) {
       return this.fetchNextPages(
-        "bookings",
+        endpoint,
         json.info.pageNavigationToken,
         json.info.totalPages
       ).then(d => {
@@ -67,16 +64,18 @@ export class Bookeo {
       ...params
     };
     if (!bookingsParams.endTime) {
-      bookingsParams.endTime = endOfDay(parseDate(bookingsParams.startTime)).toISOString();
+      bookingsParams.endTime = endOfDay(
+        parseDate(bookingsParams.startTime)
+      ).toISOString();
     }
-    return bookeoAPI.bookings
+    return this.client.bookings
       .all({
         ...bookingsParams,
         headers: authHeaders(this.creds)
       })
       .then(response => JSON.parse(response.responseData))
-      .then(this.addNextPages)
-      .then(json => json.data);
+      .then(this.addNextPages("bookings"))
+      .then(json => json.data)
   };
 }
 
