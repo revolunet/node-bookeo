@@ -55,27 +55,55 @@ export class Bookeo {
     }
     return json;
   };
+
+  getSubAccountApiKey = name => {
+    return this.subaccounts().then(data => data.filter(a => a.name === name)[0].id).catch(e => null);
+  }
+
+  setSubAccount = name => {
+    return this.getSubAccountApiKey(name).then(key => {
+      if (key) {
+        this.creds.apiKey = key
+        return true;
+      }
+      throw `account ${name} not found`
+    })
+  }
+
+  getItemsData = (collection, params) => {
+    return this.client[collection]
+      .all({
+        ...params,
+        headers: authHeaders(this.creds)
+      })
+      //.then(res => console.log(res) || res)
+      .then(response => JSON.parse(response.responseData))
+      .then(this.addNextPages(collection))
+      .then(json => json.data)
+      .catch(e => {
+        console.log('ERROR', e);
+        throw e;
+      })
+  }
+
+  // fetch products
+  products = params => this.getItemsData('products', params)
+  subaccounts = params => this.getItemsData('subaccounts', params)
+
   // fetch bookings
   bookings = params => {
-    const bookingsParams = {
+    let bookingsParams = {
       expandCustomer: true,
       itemsPerPage: 50,
       startTime: startOfToday().toISOString(),
       ...params
-    };
+    }
     if (!bookingsParams.endTime) {
       bookingsParams.endTime = endOfDay(
         parseDate(bookingsParams.startTime)
       ).toISOString();
     }
-    return this.client.bookings
-      .all({
-        ...bookingsParams,
-        headers: authHeaders(this.creds)
-      })
-      .then(response => JSON.parse(response.responseData))
-      .then(this.addNextPages("bookings"))
-      .then(json => json.data)
+    return this.getItemsData('bookings', bookingsParams)
   };
 }
 
