@@ -2,6 +2,7 @@
 
 Node API for [Bookeo API](https://www.bookeo.com/api), based on [mappersmith](https://github.com/tulios/mappersmith).
 
+Works on the server AND the browser :)
 
 ## Usage
 
