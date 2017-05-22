@@ -38,3 +38,8 @@ To get ApiKey with correct permission, send this link to user : `https://signin.
     Products
       ✓ return data key
 ```
+
+## See also
+
+ - [bookeo-proxy](http://github.com/revolunet/bookeo-proxy)
+ - [react-bookeo](http://github.com/revolunet/react-bookeo)
