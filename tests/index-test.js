@@ -23,7 +23,7 @@ var bookeo = new Bookeo({
 const client = forge(api)
 
 describe('Bookeo', () => {
-  let mockBookings, mockAccounts;
+  let mockBookings, mockAccounts, mockProducts
   beforeEach(() => {
     install()
     mockBookings = mockRequest({
@@ -37,7 +37,14 @@ describe('Bookeo', () => {
       method: 'get',
       url: url => url.match(/^https:\/\/api.bookeo.com\/v2\/subaccounts/gi),
       response: {
-        body: { data: [{ id: 1234, name:'prizoners1'}, { id: 5678, name:'prizoners2'}] }
+        body: { data: "mockSubAccounts" }
+      }
+    })
+    mockProducts = mockRequest({
+      method: 'get',
+      url: url => url.match(/^https:\/\/api.bookeo.com\/v2\/settings\/products/gi),
+      response: {
+        body: { data: "mockProducts" }
       }
     })
   })
@@ -89,37 +96,18 @@ describe('Bookeo', () => {
     })
   })
   describe('Subaccounts', () => {
-    it("get account key by name", done => {
-      bookeo.getSubAccountApiKey('prizoners2').then(data => {
-        expect(data).toEqual('5678')
-        done();
-      });
-    })
-    it("return null if not found", done => {
-      bookeo.getSubAccountApiKey('xxx').then(data => {
-        expect(data).toEqual(null)
-        done();
-      });
-    })
-    describe('setSubAccount', () => {
-      it("throw when unknown account", done => {
-        bookeo.setSubAccount('xxx').then(data => {
-          // should fail
-          expect(true).toEqual(false)
-        }).catch(e => {
-          done();
-        })
-      })
-      it("set subaccount api key for future operations", () => {
-        return bookeo.bookings().then(data => {
-          // check we use the standard api key
-          expect(mockBookings.mostRecentCall().headers()['x-bookeo-apikey']).toEqual('fakeApiKey')
-          // check we use the new api key
-          return bookeo.setSubAccount('prizoners2').then(data => bookeo.bookings().then(data => {
-            expect(mockBookings.mostRecentCall().headers()['x-bookeo-apikey']).toEqual('5678')
-          }));
-        })
+    it("return data key", () => {
+      return bookeo.subaccounts().then(data => {
+        expect(data).toEqual("mockSubAccounts")
       })
     })
   })
+  describe('Products', () => {
+    it("return data key", () => {
+      return bookeo.products().then(data => {
+        expect(data).toEqual("mockProducts")
+      })
+    })
+  })
+
 })

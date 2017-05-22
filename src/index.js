@@ -56,20 +56,6 @@ export class Bookeo {
     return json;
   };
 
-  getSubAccountApiKey = name => {
-    return this.subaccounts().then(data => data.filter(a => a.name === name)[0].id).catch(e => null);
-  }
-
-  setSubAccount = name => {
-    return this.getSubAccountApiKey(name).then(key => {
-      if (key) {
-        this.creds.apiKey = key
-        return true;
-      }
-      throw `account ${name} not found`
-    })
-  }
-
   getItemsData = (collection, params) => {
     return this.client[collection]
       .all({
