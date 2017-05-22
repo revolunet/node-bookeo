@@ -66,6 +66,27 @@ export class Bookeo {
     this.apiKey = key
   }
 
+  // return all slots for all products
+  getAllSlots = (params) => {
+    return this.products().then(products => {
+      const getSlotsParams = product => ({
+        productId: product.productId,
+        itemsPerPage: 300,
+        startTime: startOfToday().toISOString(),
+        endTime: addDays(startOfToday(), 7).toISOString(),
+        ...params
+      });
+      // match all products slots and return an object with all slots grouped by productId
+      const getSlotPromise = product => this.slots(getSlotsParams(product)).then(data => ({ [product.productId]: data || [] }))
+      const productsSlots = products.map(getSlotPromise)
+      return Promise.all(productsSlots).then(res => res.reduce((acc, c) => ({
+        ...acc,
+        ...c
+      }), {}));
+    }).catch(e=>console.log('getAllSlots error', e))
+  }
+
+  // get collection and massage data
   getItemsData = (collection, params) => {
     return this.client[collection]
       .all({
@@ -77,7 +98,7 @@ export class Bookeo {
       .then(this.addNextPages(collection))
       .then(json => json.data)
       .catch(e => {
-        console.log('ERROR', e);
+        console.log('\n\nERROR', e, '\n\n');
         throw e;
       })
   }
@@ -85,12 +106,13 @@ export class Bookeo {
   // fetch products
   products = params => this.getItemsData('products', params)
   subaccounts = params => this.getItemsData('subaccounts', params)
+  slots = params => this.getItemsData('slots', params)
 
   // fetch bookings
   bookings = params => {
     let bookingsParams = {
       expandCustomer: true,
-      itemsPerPage: 50,
+      itemsPerPage: 100,
       startTime: startOfToday().toISOString(),
       ...params
     }

@@ -16,9 +16,6 @@
     "test:watch": "npm run test -- --watch"
   },
   "dependencies": {
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-stage-0": "^6.24.1",
-    "console.table": "^0.8.0",
     "date-fns": "^1.28.5",
     "lodash.flatten": "^4.4.0",
     "mappersmith": "^2.5.1"
@@ -26,6 +23,9 @@
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "mocha-cli": "^1.0.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "console.table": "^0.8.0",
     "nwb": "0.15.x"
   },
   "babel": {

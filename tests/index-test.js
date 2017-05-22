@@ -23,7 +23,7 @@ var bookeo = new Bookeo({
 const client = forge(api)
 
 describe('Bookeo', () => {
-  let mockBookings, mockAccounts, mockProducts
+  let mockBookings, mockAccounts, mockProducts, mockSlots
   beforeEach(() => {
     install()
     mockBookings = mockRequest({
@@ -45,6 +45,13 @@ describe('Bookeo', () => {
       url: url => url.match(/^https:\/\/api.bookeo.com\/v2\/settings\/products/gi),
       response: {
         body: { data: "mockProducts" }
+      }
+    })
+    mockSlots = mockRequest({
+      method: 'get',
+      url: url => url.match(/^https:\/\/api.bookeo.com\/v2\/availability\/slots/gi),
+      response: {
+        body: { data: "mockSlots" }
       }
     })
   })
@@ -82,31 +89,60 @@ describe('Bookeo', () => {
     })
   })
   describe('Bookings', () => {
-    it("add default startTime as 'startOfToday'", done => {
-      bookeo.bookings().then(data => {
+    it("add default startTime as 'startOfToday'", () => {
+      return bookeo.bookings().then(data => {
         expect(mockBookings.mostRecentCall().params().startTime).toEqual = startOfToday().toISOString()
-        done();
       })
     })
-    it("add default endTime when not given", done => {
-      bookeo.bookings({ startTime: addDays(startOfToday(), 2).toISOString() }).then(data => {
+    it("add default endTime when not given", () => {
+      return bookeo.bookings({ startTime: addDays(startOfToday(), 2).toISOString() }).then(data => {
         expect(mockBookings.mostRecentCall().params().endTime).toEqual = addDays(startOfToday(), 3).toISOString()
-        done();
       })
     })
+    it("return data key", () => bookeo.bookings().then(data => expect(data).toEqual([1, 2, 3, 4])))
   })
   describe('Subaccounts', () => {
-    it("return data key", () => {
-      return bookeo.subaccounts().then(data => {
-        expect(data).toEqual("mockSubAccounts")
-      })
-    })
+    it("return data key", () => bookeo.subaccounts().then(data => expect(data).toEqual("mockSubAccounts")))
   })
   describe('Products', () => {
-    it("return data key", () => {
-      return bookeo.products().then(data => {
-        expect(data).toEqual("mockProducts")
+    it("return data key", () => bookeo.products().then(data => expect(data).toEqual("mockProducts")))
+  })
+  describe('Slots', () => {
+    it("return data key", () => bookeo.slots().then(data => expect(data).toEqual("mockSlots")))
+  })
+  describe('getAllSlots', () => {
+    beforeEach(() => {
+      mockSlots = mockRequest({
+        method: 'get',
+        url: url => url.match(/^https:\/\/api.bookeo.com\/v2\/availability\/slots/gi),
+        response: {
+          body: { data: [1, 2, 3] }
+        }
+      })
+      mockProducts = mockRequest({
+        method: 'get',
+        url: url => url.match(/^https:\/\/api.bookeo.com\/v2\/settings\/products/gi),
+        response: {
+          body: { data: [{
+            productId: 1,
+          },{
+            productId: 2,
+          },{
+            productId: 3,
+          }] }
+        }
       })
     })
-  })
+    it("should return all slots grouped by product", () => {
+      return bookeo.getAllSlots().then(data => {
+        expect(mockProducts.callsCount()).toEqual(1)
+        expect(mockSlots.callsCount()).toEqual(3)
+        expect(data).toEqual({
+          1: [1, 2, 3],
+          2: [1, 2, 3],
+          3: [1, 2, 3]
+        })
+      })
+    })
+  });
 })

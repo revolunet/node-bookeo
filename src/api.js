@@ -1,6 +1,11 @@
 export default {
   host: "https://api.bookeo.com/v2",
   resources: {
+    slots: {
+      all: {
+        path: '/availability/slots'
+      }
+    },
     products: {
       all: {
         path: "/settings/products",

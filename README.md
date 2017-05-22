@@ -1,13 +1,14 @@
 # node-bookeo
 
-Node API for [Bookeo API](https://www.bookeo.com/api), based on [mappersmith](https://github.com/tulios/mappersmith).
+Node API for [Bookeo REST API](https://www.bookeo.com/api), based on [mappersmith](https://github.com/tulios/mappersmith).
 
 Works on the server AND the browser :)
+
+Adds some helpers
 
 ## Usage
 
 ```js
-
 import Bookeo from 'node-bookeo'
 
 const bookeo = new Bookeo({ secretKey, apiKey });
@@ -16,12 +17,30 @@ bookeo.bookings().then(results => {
   // return today bookings
   console.table(results);
 })
-
 ```
+
+#### REST mapping
+
+method | description
+----|------
+bookeo.bookings(params) | GET [/bookings](https://www.bookeo.com/apiref/index.html#!/Bookings/bookings_get)
+bookeo.slots(params) | GET [/availability/slots](https://www.bookeo.com/apiref/index.html#!/Availability/availability_slots_get)
+bookeo.products(params) | GET [/settings/products](https://www.bookeo.com/apiref/index.html#!/Settings/settings_products_get)
+bookeo.subaccounts(params) | GET [/subaccounts](https://www.bookeo.com/apiref/index.html#!/Subaccounts/subaccounts_get)
+
+NB :  autoFetch the first 5 result pages if any
+
+#### Utilities
+
+method | description
+----|------
+bookeo.setApikey(apikey) | change API key for next requests
+bookeo.getAllSlots(params) | return all available slots grouped by products
+
 
 ## Permissions
 
-To get ApiKey with correct permission, send this link to user : `https://signin.bookeo.com/?authappid=L6W6RK34CCWR&permissions=bookings_r_all,availability_r,blocks_r_all`. see the [scopes docs](https://www.bookeo.com/api/setup).
+To get ApiKey with correct permission, send this link to user : `https://signin.bookeo.com/?authappid=xxxxxx&permissions=bookings_r_all,availability_r,blocks_r_all`. see the [scopes docs](https://www.bookeo.com/api/setup).
 
 ## Tests
 
@@ -42,5 +61,5 @@ To get ApiKey with correct permission, send this link to user : `https://signin.
 
 ## See also
 
- - [bookeo-proxy](http://github.com/revolunet/bookeo-proxy)
+ - [bookeo-proxy](http://github.com/revolunet/bookeo-proxy) : you need this to use node-bookeo in the browser
  - [react-bookeo](http://github.com/revolunet/react-bookeo)
