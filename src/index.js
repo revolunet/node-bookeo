@@ -16,9 +16,15 @@ const authHeaders = ({ secretKey, apiKey }) => ({
 });
 
 export class Bookeo {
-  constructor({ secretKey, apiKey }) {
+  constructor({ secretKey, apiKey, host }) {
     this.creds = { secretKey, apiKey };
-    this.client = forge(api);
+    const bookeoApiDefinition = {
+      ...api
+    }
+    if (host) {
+      bookeoApiDefinition.host = host
+    }
+    this.client = forge(bookeoApiDefinition);
   }
   // fetch a singlepage based on pageNavigationToken
   // see https://www.bookeo.com/api/protocol/
@@ -55,6 +61,10 @@ export class Bookeo {
     }
     return json;
   };
+
+  setApiKey = key => {
+    this.apiKey = key
+  }
 
   getItemsData = (collection, params) => {
     return this.client[collection]

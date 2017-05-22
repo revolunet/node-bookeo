@@ -6,8 +6,6 @@ import Bookeo from "./src";
 
 const bookeo = new Bookeo(creds);
 
-
-
 const showBookings = () => {
   return bookeo.bookings().then(data => {
     if (!data.length) {
@@ -23,7 +21,6 @@ const showBookings = () => {
     );
   }).catch(e => console.log(e))
 }
-
 
 const showSubaccounts = () => {
   return bookeo.subaccounts().then(data => {
