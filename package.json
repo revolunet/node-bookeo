@@ -1,6 +1,6 @@
 {
   "name": "node-bookeo",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Bookeo API",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -29,7 +29,10 @@
     "nwb": "0.15.x"
   },
   "babel": {
-    "presets": ["es2015", "stage-0"]
+    "presets": [
+      "es2015",
+      "stage-0"
+    ]
   },
   "repository": {
     "type": "git",
