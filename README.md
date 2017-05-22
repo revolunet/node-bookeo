@@ -1,5 +1,8 @@
 # node-bookeo
 
+[![npm package][npm-badge]][npm]
+
+
 Node API for [Bookeo REST API](https://www.bookeo.com/api), based on [mappersmith](https://github.com/tulios/mappersmith).
 
 Works on the server AND the browser :)
@@ -45,21 +48,30 @@ To get ApiKey with correct permission, send this link to user : `https://signin.
 ## Tests
 
 ```txt
-  Bookeo
-    General
-      ✓ add credentials headers to request
-      ✓ return data key
-      ✓ fetch and concat multiple pages if any
-    Bookings
-      ✓ add default startTime as 'startOfToday'
-      ✓ add default endTime when not given
-    Subaccounts
-      ✓ return data key
-    Products
-      ✓ return data key
+Bookeo
+  General
+    ✓ add credentials headers to request
+    ✓ return data key
+    ✓ fetch and concat multiple pages if any
+  Bookings
+    ✓ add default startTime as 'startOfToday'
+    ✓ add default endTime when not given
+    ✓ return data key
+  Subaccounts
+    ✓ return data key
+  Products
+    ✓ return data key
+  Slots
+    ✓ return data key
+  getAllSlots
+    ✓ should return all slots grouped by product
 ```
 
 ## See also
 
  - [bookeo-proxy](http://github.com/revolunet/bookeo-proxy) : you need this to use node-bookeo in the browser
  - [react-bookeo](http://github.com/revolunet/react-bookeo)
+
+
+[npm-badge]: https://img.shields.io/npm/v/node-bookeo.png?style=flat-square
+[npm]: https://www.npmjs.org/package/node-bookeo
