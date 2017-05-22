@@ -3626,6 +3626,14 @@ mkdirp@0.5.1, mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.1, mkdirp@~0.5.0, mkdi
   dependencies:
     minimist "0.0.8"
 
+mocha-cli@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/mocha-cli/-/mocha-cli-1.0.1.tgz#32002ca5b5e956e84bfe846827eb0bc4b4561b05"
+  dependencies:
+    chalk "^1.1.1"
+    debug "^2.2.0"
+    resolve "^1.1.7"
+
 mocha@3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/mocha/-/mocha-3.2.0.tgz#7dc4f45e5088075171a68896814e6ae9eb7a85e3"
@@ -4836,7 +4844,7 @@ resolve@1.1.x:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.1.7.tgz#203114d82ad2c5ed9e8e0411b3932875e889e97b"
 
-resolve@1.2.0, resolve@^1.2.0:
+resolve@1.2.0, resolve@^1.1.7, resolve@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.2.0.tgz#9589c3f2f6149d1417a40becc1663db6ec6bc26c"
 
