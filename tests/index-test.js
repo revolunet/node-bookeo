@@ -100,14 +100,26 @@ describe('Bookeo', () => {
       })
     })
     it("return data key", () => bookeo.bookings().then(data => expect(data).toEqual([1, 2, 3, 4])))
+    it("pass parameters", () => bookeo.bookings({ paramTest2: 'kikoo2' }).then(data => {
+      expect(mockBookings.mostRecentCall().params().paramTest2).toEqual('kikoo2')
+    }))
   })
   describe('Subaccounts', () => {
+    it("pass parameters", () => bookeo.subaccounts({ paramTest: 'kikoo' }).then(data => {
+      expect(mockAccounts.mostRecentCall().params().paramTest).toEqual('kikoo')
+    }))
     it("return data key", () => bookeo.subaccounts().then(data => expect(data).toEqual("mockSubAccounts")))
   })
   describe('Products', () => {
+    it("pass parameters", () => bookeo.products({ paramTest3: 'kikoo3' }).then(data => {
+      expect(mockProducts.mostRecentCall().params().paramTest3).toEqual('kikoo3')
+    }))
     it("return data key", () => bookeo.products().then(data => expect(data).toEqual("mockProducts")))
   })
   describe('Slots', () => {
+    it("pass parameters", () => bookeo.slots({ paramTest4: 'kikoo4' }).then(data => {
+      expect(mockSlots.mostRecentCall().params().paramTest4).toEqual('kikoo4')
+    }))
     it("return data key", () => bookeo.slots().then(data => expect(data).toEqual("mockSlots")))
   })
   describe('getAllSlots', () => {

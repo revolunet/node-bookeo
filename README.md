@@ -57,11 +57,15 @@ Bookeo
     ✓ add default startTime as 'startOfToday'
     ✓ add default endTime when not given
     ✓ return data key
+    ✓ pass parameters
   Subaccounts
+    ✓ pass parameters
     ✓ return data key
   Products
+    ✓ pass parameters
     ✓ return data key
   Slots
+    ✓ pass parameters
     ✓ return data key
   getAllSlots
     ✓ should return all slots grouped by product
