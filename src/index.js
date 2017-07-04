@@ -103,6 +103,19 @@ export class Bookeo {
       })
   }
 
+  // get collection item
+  getItemData = (collection, itemId, method='byId') => {
+    return this.client[collection][method]({
+      id: itemId,
+      headers: authHeaders(this.creds)
+    })
+    .then(response => JSON.parse(response.responseData))
+    .catch(e => {
+      console.log('\n\nERROR', e, '\n\n');
+      throw e;
+    })
+  }
+
   // fetch products
   products = params => this.getItemsData('products', params)
   subaccounts = params => this.getItemsData('subaccounts', params)
@@ -123,6 +136,24 @@ export class Bookeo {
     }
     return this.getItemsData('bookings', bookingsParams)
   };
+
+  booking = (bookingId, {expand=false} = {}) => {
+    return this.getItemData('bookings', bookingId).then(bookingData => {
+      if (!expand) {
+        return bookingData
+      }
+      const data = {
+        ...bookingData
+      }
+      return this.getItemData('bookings', bookingId, 'customer').then(customerData => {
+        data.customer = { ...customerData };
+        return this.getItemData('bookings', bookingId, 'payments').then(paymentsData => {
+          data.payments = { ...paymentsData };
+          return data
+        })
+      })
+    })
+  }
 }
 
 export default Bookeo;

@@ -24,8 +24,13 @@ export default {
         //params: {}
       },
       byId: {
-        path: "/bookings/{id}",
-        params: { expandCustomer: true, itemsPerPage: 100 }
+        path: "/bookings/{id}"
+      },
+      payments: {
+        path: "/bookings/{id}/payments"
+      },
+      customer: {
+        path: "/bookings/{id}/customer"
       }
     }
   }

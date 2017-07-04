@@ -27,11 +27,14 @@ bookeo.bookings().then(results => {
 method | description
 ----|------
 bookeo.bookings(params) | GET [/bookings](https://www.bookeo.com/apiref/index.html#!/Bookings/bookings_get)
+bookeo.booking(id, options) | GET [/bookings/{bookingId}](https://www.bookeo.com/apiref/index.html#!/Bookings/bookings_get)
 bookeo.slots(params) | GET [/availability/slots](https://www.bookeo.com/apiref/index.html#!/Availability/availability_slots_get)
 bookeo.products(params) | GET [/settings/products](https://www.bookeo.com/apiref/index.html#!/Settings/settings_products_get)
 bookeo.subaccounts(params) | GET [/subaccounts](https://www.bookeo.com/apiref/index.html#!/Subaccounts/subaccounts_get)
 
 NB :  autoFetch the first 5 result pages if any
+
+ - bookeo.booking options : expand(false) : expand booking customer + payments
 
 #### Utilities
 
@@ -39,6 +42,7 @@ method | description
 ----|------
 bookeo.setApikey(apikey) | change API key for next requests
 bookeo.getAllSlots(params) | return all available slots grouped by products
+
 
 
 ## Permissions
@@ -69,6 +73,11 @@ Bookeo
     ✓ return data key
   getAllSlots
     ✓ should return all slots grouped by product
+  booking
+    ✓ should request bookeo api
+    ✓ expand=false should have no customer, payments
+    ✓ expand=true should have customer + payments
+
 ```
 
 ## See also

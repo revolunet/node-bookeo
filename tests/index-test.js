@@ -157,4 +157,26 @@ describe('Bookeo', () => {
       })
     })
   });
+  describe('booking', () => {
+    it("should request bookeo api", () => {
+      return bookeo.booking(123).then(data => {
+        expect(mockBookings.callsCount()).toEqual(1)
+        expect(mockBookings.mostRecentCall().params().id).toEqual('123')
+      });
+    })
+    it("expand=false should have no customer, payments", () => {
+      return bookeo.booking(123, {expand: false}).then(data => {
+        expect(mockBookings.callsCount()).toEqual(1)
+        expect(data.customer).toNotExist()
+        expect(data.payments).toNotExist()
+      });
+    })
+    it("expand=true should have customer + payments", () => {
+      return bookeo.booking(123, {expand: true}).then(data => {
+        expect(mockBookings.callsCount()).toEqual(3)
+        expect(data.customer).toExist()
+        expect(data.payments).toExist()
+      });
+    })
+  })
 })
