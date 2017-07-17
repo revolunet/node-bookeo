@@ -37,21 +37,21 @@ describe('Bookeo', () => {
       method: 'get',
       url: url => url.match(/^https:\/\/api.bookeo.com\/v2\/subaccounts/gi),
       response: {
-        body: { data: "mockSubAccounts" }
+        body: { data: [4, 5, 6] }
       }
     })
     mockProducts = mockRequest({
       method: 'get',
       url: url => url.match(/^https:\/\/api.bookeo.com\/v2\/settings\/products/gi),
       response: {
-        body: { data: "mockProducts" }
+        body: { data: [7, 8, 9] }
       }
     })
     mockSlots = mockRequest({
       method: 'get',
       url: url => url.match(/^https:\/\/api.bookeo.com\/v2\/availability\/slots/gi),
       response: {
-        body: { data: "mockSlots" }
+        body: { data: [10, 11, 12] }
       }
     })
   })
@@ -65,13 +65,13 @@ describe('Bookeo', () => {
         done();
       })
     })
-    it("return data key", done => {
-      bookeo.bookings().then(data => {
+    it("return data key", () => {
+      return bookeo.bookings().then(data => {
+        expect(mockBookings.callsCount()).toEqual(1)
         expect(data).toEqual([1, 2, 3, 4])
-        done();
       })
     })
-    it("fetch and concat multiple pages if any", done => {
+    it("fetch and concat multiple pages if any", () => {
       mockBookings = mockRequest({
         method: 'get',
         url: url => url.match(/^https:\/\/api.bookeo.com\/v2\/bookings/gi),
@@ -79,13 +79,12 @@ describe('Bookeo', () => {
           body: { data: [1, 2, 3, 4], info: { pageNavigationToken: 'fakePageNavigationToken', totalPages: 3 } }
         }
       })
-      bookeo.bookings().then(data => {
+      return bookeo.bookings().then(data => {
         expect(mockBookings.callsCount()).toEqual(3)
         expect(mockBookings.calls()[1].params()).toEqual({pageNavigationToken: 'fakePageNavigationToken', pageNumber: 2})
         expect(mockBookings.calls()[2].params()).toEqual({pageNavigationToken: 'fakePageNavigationToken', pageNumber: 3})
         expect(data).toEqual([1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4])
-        done();
-      }).catch(e => console.log(e))
+      })
     })
   })
   describe('Bookings', () => {
@@ -108,19 +107,19 @@ describe('Bookeo', () => {
     it("pass parameters", () => bookeo.subaccounts({ paramTest: 'kikoo' }).then(data => {
       expect(mockAccounts.mostRecentCall().params().paramTest).toEqual('kikoo')
     }))
-    it("return data key", () => bookeo.subaccounts().then(data => expect(data).toEqual("mockSubAccounts")))
+    it("return data key", () => bookeo.subaccounts().then(data => expect(data).toEqual([4, 5, 6])))
   })
   describe('Products', () => {
     it("pass parameters", () => bookeo.products({ paramTest3: 'kikoo3' }).then(data => {
       expect(mockProducts.mostRecentCall().params().paramTest3).toEqual('kikoo3')
     }))
-    it("return data key", () => bookeo.products().then(data => expect(data).toEqual("mockProducts")))
+    it("return data key", () => bookeo.products().then(data => expect(data).toEqual([7, 8, 9])))
   })
   describe('Slots', () => {
     it("pass parameters", () => bookeo.slots({ paramTest4: 'kikoo4' }).then(data => {
       expect(mockSlots.mostRecentCall().params().paramTest4).toEqual('kikoo4')
     }))
-    it("return data key", () => bookeo.slots().then(data => expect(data).toEqual("mockSlots")))
+    it("return data key", () => bookeo.slots().then(data => expect(data).toEqual([10, 11, 12])))
   })
   describe('getAllSlots', () => {
     beforeEach(() => {

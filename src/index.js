@@ -39,27 +39,20 @@ export class Bookeo {
   };
   // fetch pages 2->totalPages
   fetchNextPages = (endpoint, pageNavigationToken, totalPages) => {
-    const singleFetch = pageNumber =>
-      this.fetchPage(endpoint, pageNavigationToken, pageNumber).then(
-        response => response.data
-      );
-    const fetchs = Array.from({ length: Math.min(5, totalPages - 1) }, (k, v) =>
-      singleFetch(v + 2)
-    );
+    const singleFetch = pageNumber =>this.fetchPage(endpoint, pageNavigationToken, pageNumber).then(response => response.data)
+    const fetchs = Array.from({ length: Math.min(4, totalPages - 1) }, (k, v) => singleFetch(v + 2))
     return Promise.all(fetchs).then(flatten);
   };
-  addNextPages = endpoint => json => {
+
+  getNextPages = endpoint => json => {
     if (json.info && json.info.totalPages > 1) {
       return this.fetchNextPages(
         endpoint,
         json.info.pageNavigationToken,
         json.info.totalPages
-      ).then(d => {
-        json.data.push(...d);
-        return json;
-      });
+      )
     }
-    return json;
+    return [];
   };
 
   setApiKey = key => {
@@ -88,15 +81,20 @@ export class Bookeo {
 
   // get collection and massage data
   getItemsData = (collection, params) => {
+    const items = [];
     return this.client[collection]
       .all({
         ...params,
         headers: authHeaders(this.creds)
       })
-      //.then(res => console.log(res) || res)
-      .then(response => JSON.parse(response.responseData))
-      .then(this.addNextPages(collection))
-      .then(json => json.data)
+      .then(response => {
+        const json = JSON.parse(response.responseData)
+        items.push(...json.data);
+        return json;
+      })
+      .then(this.getNextPages(collection))
+      .then(data => items.push(...data))
+      .then(data => items)
       .catch(e => {
         console.log('\n\nERROR', e, '\n\n');
         throw e;
