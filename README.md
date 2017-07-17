@@ -77,6 +77,11 @@ Bookeo
     ✓ should request bookeo api
     ✓ expand=false should have no customer, payments
     ✓ expand=true should have customer + payments
+  payments
+    ✓ should request bookeo api
+
+
+18 passing (94ms)
 
 ```
 

@@ -23,7 +23,7 @@ var bookeo = new Bookeo({
 const client = forge(api)
 
 describe('Bookeo', () => {
-  let mockBookings, mockAccounts, mockProducts, mockSlots
+  let mockBookings, mockAccounts, mockProducts, mockSlots, mockPayments
   beforeEach(() => {
     install()
     mockBookings = mockRequest({
@@ -31,6 +31,13 @@ describe('Bookeo', () => {
       url: url => url.match(/^https:\/\/api.bookeo.com\/v2\/bookings/gi),
       response: {
         body: { data: [1, 2, 3, 4] }
+      }
+    })
+    mockPayments = mockRequest({
+      method: 'get',
+      url: url => url.match(/^https:\/\/api.bookeo.com\/v2\/payments/gi),
+      response: {
+        body: { data: [42, 43, 44] }
       }
     })
     mockAccounts = mockRequest({
@@ -175,6 +182,14 @@ describe('Bookeo', () => {
         expect(mockBookings.callsCount()).toEqual(3)
         expect(data.customer).toExist()
         expect(data.payments).toExist()
+      });
+    })
+  })
+  describe('payments', () => {
+    it("should request bookeo api", () => {
+      return bookeo.payments().then(data => {
+        expect(mockPayments.callsCount()).toEqual(1)
+        expect(data).toEqual([42, 43, 44])
       });
     })
   })
