@@ -18,6 +18,12 @@ export default {
         //params: {}
       },
     },
+    payments: {
+      all: {
+        path: "/payments",
+        //params: {}
+      }
+    },
     bookings: {
       all: {
         path: "/bookings",

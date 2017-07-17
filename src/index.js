@@ -118,12 +118,11 @@ export class Bookeo {
   products = params => this.getItemsData('products', params)
   subaccounts = params => this.getItemsData('subaccounts', params)
   slots = params => this.getItemsData('slots', params)
+  payments = params => this.getItemsData('payments', params)
 
   // fetch bookings
   bookings = params => {
     let bookingsParams = {
-      expandCustomer: true,
-      itemsPerPage: 100,
       startTime: startOfToday().toISOString(),
       ...params
     }
