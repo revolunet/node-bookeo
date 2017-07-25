@@ -24,6 +24,8 @@ bookeo.bookings().then(results => {
 
 #### REST mapping
 
+`bookeo.client` gives you access to [mappersmith](https://github.com/tulios/mappersmith) instance.
+
 method | description
 ----|------
 bookeo.bookings(params) | GET [/bookings](https://www.bookeo.com/apiref/index.html#!/Bookings/bookings_get)
