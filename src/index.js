@@ -1,4 +1,6 @@
 import forge from "mappersmith";
+import EncodeJson from 'mappersmith/middlewares/encode-json'
+
 import {
   startOfToday,
   endOfToday,
@@ -15,6 +17,14 @@ const authHeaders = ({ secretKey, apiKey }) => ({
   "X-Bookeo-apiKey": apiKey
 });
 
+const getAuthMiddleware = headers => () => ({
+  request(request) {
+    return request.enhance({
+      headers
+    })
+  }
+})
+
 export class Bookeo {
   constructor({ secretKey, apiKey, host }) {
     this.creds = { secretKey, apiKey };
@@ -24,7 +34,15 @@ export class Bookeo {
     if (host) {
       bookeoApiDefinition.host = host
     }
-    this.client = forge(bookeoApiDefinition);
+
+
+    this.client = forge({
+      middlewares: [ EncodeJson, getAuthMiddleware({
+        ...authHeaders(this.creds),
+        'Content-Type': 'application/json'
+      }) ],
+      ...bookeoApiDefinition
+    });
   }
   // fetch a singlepage based on pageNavigationToken
   // see https://www.bookeo.com/api/protocol/
@@ -32,8 +50,7 @@ export class Bookeo {
     return this.client[endpoint]
       .all({
         pageNavigationToken,
-        pageNumber,
-        headers: authHeaders(this.creds)
+        pageNumber
       })
       .then(response => JSON.parse(response.responseData));
   };
@@ -84,8 +101,7 @@ export class Bookeo {
     const items = [];
     return this.client[collection]
       .all({
-        ...params,
-        headers: authHeaders(this.creds)
+        ...params
       })
       .then(response => {
         const json = JSON.parse(response.responseData)
@@ -104,8 +120,7 @@ export class Bookeo {
   // get collection item
   getItemData = (collection, itemId, method='byId') => {
     return this.client[collection][method]({
-      id: itemId,
-      headers: authHeaders(this.creds)
+      id: itemId
     })
     .then(response => JSON.parse(response.responseData))
     .catch(e => {
@@ -119,6 +134,7 @@ export class Bookeo {
   subaccounts = params => this.getItemsData('subaccounts', params)
   slots = params => this.getItemsData('slots', params)
   payments = params => this.getItemsData('payments', params)
+  webhooks = params => this.getItemsData('webhooks', params)
 
   // fetch bookings
   bookings = params => {
