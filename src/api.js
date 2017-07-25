@@ -38,6 +38,19 @@ export default {
       customer: {
         path: "/bookings/{id}/customer"
       }
+    },
+    webhooks: {
+      create: {
+        method: 'post',
+        path: '/webhooks',
+        bodyAttr: 'webhook'
+      },
+      byId: {
+        path: '/webhooks/{id}'
+      },
+      all: {
+        path: "/webhooks"
+      },
     }
   }
 }
