@@ -25,6 +25,19 @@ const getAuthMiddleware = headers => () => ({
   }
 })
 
+const BookeoApiResponseMiddleware = () => ({
+  response(next) {
+    return next().then((response) => {
+      const json = JSON.parse(response.responseData);
+      // return "data" key for array
+      if (json.info && json.info.totalPages) {
+        return json.data
+      }
+      return json
+    })
+  }
+})
+
 export class Bookeo {
   constructor({ secretKey, apiKey, host }) {
     this.creds = { secretKey, apiKey };
@@ -37,10 +50,14 @@ export class Bookeo {
 
 
     this.client = forge({
-      middlewares: [ EncodeJson, getAuthMiddleware({
-        ...authHeaders(this.creds),
-        'Content-Type': 'application/json'
-      }) ],
+      middlewares: [
+        EncodeJson,
+        getAuthMiddleware({
+          ...authHeaders(this.creds),
+          'Content-Type': 'application/json'
+        }),
+        BookeoApiResponseMiddleware
+      ],
       ...bookeoApiDefinition
     });
   }
@@ -52,7 +69,7 @@ export class Bookeo {
         pageNavigationToken,
         pageNumber
       })
-      .then(response => JSON.parse(response.responseData));
+      //.then(response => JSON.parse(response.responseData));
   };
   // fetch pages 2->totalPages
   fetchNextPages = (endpoint, pageNavigationToken, totalPages) => {
@@ -61,16 +78,16 @@ export class Bookeo {
     return Promise.all(fetchs).then(flatten);
   };
 
-  getNextPages = endpoint => json => {
-    if (json.info && json.info.totalPages > 1) {
-      return this.fetchNextPages(
-        endpoint,
-        json.info.pageNavigationToken,
-        json.info.totalPages
-      )
-    }
-    return [];
-  };
+  // getNextPages = endpoint => json => {
+  //   if (json.info && json.info.totalPages > 1) {
+  //     return this.fetchNextPages(
+  //       endpoint,
+  //       json.info.pageNavigationToken,
+  //       json.info.totalPages
+  //     )
+  //   }
+  //   return [];
+  // };
 
   setApiKey = key => {
     this.apiKey = key
@@ -103,14 +120,14 @@ export class Bookeo {
       .all({
         ...params
       })
-      .then(response => {
-        const json = JSON.parse(response.responseData)
-        items.push(...json.data);
-        return json;
-      })
-      .then(this.getNextPages(collection))
-      .then(data => items.push(...data))
-      .then(data => items)
+      // .then(response => {
+      //   const json = JSON.parse(response.responseData)
+      //   items.push(...json.data);
+      //   return json;
+      // })
+    //  .then(this.getNextPages(collection))
+      .then(data => data.data)
+  //    .then(() => items)
       .catch(e => {
         console.log('\n\nERROR', e, '\n\n');
         throw e;
@@ -122,7 +139,7 @@ export class Bookeo {
     return this.client[collection][method]({
       id: itemId
     })
-    .then(response => JSON.parse(response.responseData))
+  //  .then(response => JSON.parse(response.responseData))
     .catch(e => {
       console.log('\n\nERROR', e, '\n\n');
       throw e;

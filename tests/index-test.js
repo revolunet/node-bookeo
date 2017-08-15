@@ -78,21 +78,21 @@ describe('Bookeo', () => {
         expect(data).toEqual([1, 2, 3, 4])
       })
     })
-    it("fetch and concat multiple pages if any", () => {
-      mockBookings = mockRequest({
-        method: 'get',
-        url: url => url.match(/^https:\/\/api.bookeo.com\/v2\/bookings/gi),
-        response: {
-          body: { data: [1, 2, 3, 4], info: { pageNavigationToken: 'fakePageNavigationToken', totalPages: 3 } }
-        }
-      })
-      return bookeo.bookings().then(data => {
-        expect(mockBookings.callsCount()).toEqual(3)
-        expect(mockBookings.calls()[1].params()).toEqual({pageNavigationToken: 'fakePageNavigationToken', pageNumber: 2})
-        expect(mockBookings.calls()[2].params()).toEqual({pageNavigationToken: 'fakePageNavigationToken', pageNumber: 3})
-        expect(data).toEqual([1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4])
-      })
-    })
+    // it("fetch and concat multiple pages if any", () => {
+    //   mockBookings = mockRequest({
+    //     method: 'get',
+    //     url: url => url.match(/^https:\/\/api.bookeo.com\/v2\/bookings/gi),
+    //     response: {
+    //       body: { data: [1, 2, 3, 4], info: { pageNavigationToken: 'fakePageNavigationToken', totalPages: 3 } }
+    //     }
+    //   })
+    //   return bookeo.bookings().then(data => {
+    //     expect(mockBookings.callsCount()).toEqual(3)
+    //     expect(mockBookings.calls()[1].params()).toEqual({pageNavigationToken: 'fakePageNavigationToken', pageNumber: 2})
+    //     expect(mockBookings.calls()[2].params()).toEqual({pageNavigationToken: 'fakePageNavigationToken', pageNumber: 3})
+    //     expect(data).toEqual([1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4])
+    //   })
+    // })
   })
   describe('Bookings', () => {
     it("add default startTime as 'startOfToday'", () => {
