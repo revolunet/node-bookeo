@@ -16,15 +16,17 @@ import Bookeo from 'node-bookeo'
 
 const bookeo = new Bookeo({ secretKey, apiKey });
 
-bookeo.bookings().then(results => {
-  // return today bookings
+bookeo.client.bookings.all().then(results => {
+  // return bookings
   console.table(results);
 })
 ```
 
 #### REST mapping
 
-`bookeo.client` gives you access to [mappersmith](https://github.com/tulios/mappersmith) instance.
+`bookeo.client` gives you access to [mappersmith](https://github.com/tulios/mappersmith) instances from [src/api.js](src/api.js).
+
+##### Custom methods
 
 method | description
 ----|------
@@ -34,8 +36,6 @@ bookeo.slots(params) | GET [/availability/slots](https://www.bookeo.com/apiref/i
 bookeo.products(params) | GET [/settings/products](https://www.bookeo.com/apiref/index.html#!/Settings/settings_products_get)
 bookeo.subaccounts(params) | GET [/subaccounts](https://www.bookeo.com/apiref/index.html#!/Subaccounts/subaccounts_get)
 
-NB :  autoFetch the first 5 result pages if any
-
  - bookeo.booking options : expand(false) : expand booking customer + payments
 
 #### Utilities
@@ -44,8 +44,6 @@ method | description
 ----|------
 bookeo.setApikey(apikey) | change API key for next requests
 bookeo.getAllSlots(params) | return all available slots grouped by products
-
-
 
 ## Permissions
 
@@ -58,7 +56,6 @@ Bookeo
   General
     ✓ add credentials headers to request
     ✓ return data key
-    ✓ fetch and concat multiple pages if any
   Bookings
     ✓ add default startTime as 'startOfToday'
     ✓ add default endTime when not given
