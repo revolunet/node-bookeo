@@ -24,6 +24,15 @@ export default {
         //params: {}
       }
     },
+    customers: {
+      all: {
+        path: "/customers",
+        //params: {}
+      },
+      byId: {
+        path: "/customers/{id}"
+      },
+    },
     bookings: {
       all: {
         path: "/bookings",
