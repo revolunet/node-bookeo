@@ -1,6 +1,6 @@
 {
   "name": "node-bookeo",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "Bookeo API",
   "main": "lib/index.js",
   "module": "es/index.js",
