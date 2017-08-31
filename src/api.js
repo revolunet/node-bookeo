@@ -22,6 +22,10 @@ export default {
       all: {
         path: "/payments",
         //params: {}
+      },
+      byId: {
+        path: "/payments/{id}",
+        //params: {}
       }
     },
     customers: {
