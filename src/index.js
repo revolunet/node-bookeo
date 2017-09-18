@@ -187,3 +187,4 @@ export class Bookeo {
 }
 
 export default Bookeo;
+module.exports = Bookeo;
