@@ -28,12 +28,16 @@ const getAuthMiddleware = headers => () => ({
 const BookeoApiResponseMiddleware = () => ({
   response(next) {
     return next().then((response) => {
-      const json = JSON.parse(response.responseData);
-      // return "data" key for array
-      if (json.info && json.info.totalPages) {
-        return json.data
+      if (response.responseData) {
+        const json = JSON.parse(response.responseData);
+        // return "data" key for array
+        if (json.info && json.info.totalPages) {
+          return json.data
+        }
+        return json
+      } else {
+        return {}
       }
-      return json
     })
   }
 })

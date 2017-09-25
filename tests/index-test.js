@@ -23,7 +23,7 @@ var bookeo = new Bookeo({
 const client = forge(api)
 
 describe('Bookeo', () => {
-  let mockBookings, mockAccounts, mockProducts, mockSlots, mockPayments
+  let mockBookings, mockAccounts, mockProducts, mockSlots, mockPayments, mockWebhooks
   beforeEach(() => {
     install()
     mockBookings = mockRequest({
@@ -45,6 +45,13 @@ describe('Bookeo', () => {
       url: url => url.match(/^https:\/\/api.bookeo.com\/v2\/subaccounts/gi),
       response: {
         body: { data: [4, 5, 6] }
+      }
+    })
+    mockWebhooks = mockRequest({
+      method: 'get',
+      url: url => url.match(/^https:\/\/api.bookeo.com\/v2\/webhooks/gi),
+      response: {
+        body: ''
       }
     })
     mockProducts = mockRequest({
@@ -78,6 +85,14 @@ describe('Bookeo', () => {
         expect(data).toEqual([1, 2, 3, 4])
       })
     })
+    it("dont crash on empty response", () => {
+      return bookeo.webhooks().then(data => {
+        expect(mockWebhooks.callsCount()).toEqual(1)
+        expect(data).toEqual(undefined)
+      })
+    })
+  })
+
     // it("fetch and concat multiple pages if any", () => {
     //   mockBookings = mockRequest({
     //     method: 'get',
@@ -93,7 +108,7 @@ describe('Bookeo', () => {
     //     expect(data).toEqual([1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4])
     //   })
     // })
-  })
+  //})
   describe('Bookings', () => {
     it("add default startTime as 'startOfToday'", () => {
       return bookeo.bookings().then(data => {
