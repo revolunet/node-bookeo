@@ -55,7 +55,8 @@ export default {
     webhooks: {
       create: {
         method: 'post',
-        path: '/webhooks'
+        path: '/webhooks',
+        bodyAttr: 'webhook'
       },
       byId: {
         path: '/webhooks/{id}'
